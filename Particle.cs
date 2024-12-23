@@ -7,59 +7,61 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace particle_game;
+namespace ParticleGame;
 
 
 public enum ParticleType
 {
+    Void,
     Ground,
-    Sand
+    Sand,
+    Water,
+    Steam,
+    Lava
 }
 
 
 /// <summary>
 /// Class representing a non-empty pixel.
 /// </summary>
-public class Particle
+public partial class Particle
 {
     public Color Colour { get; }
     public Texture2D Texture { get; }
     public ParticleType Type { get; }
+    public const int SIZE = 10;
 
-    public bool Gravity { get; set; } = true;
 
-
-    public Particle(ParticleType type, Texture2D texture)
+    public Particle(ParticleType type, GraphicsDevice device)
     {
-        Texture = texture;
+        Texture = new(device, SIZE, SIZE);
         Type = type;
 
         switch (Type)
         {
             case ParticleType.Ground:
-                Colour = Color.Brown;
-                Gravity = false;
+                Colour = Color.Gray;
                 break;
             case ParticleType.Sand:
                 Colour = Color.Yellow;
                 break;
+            case ParticleType.Water:
+                Colour = Color.MediumAquamarine;
+                break;
+            case ParticleType.Steam:
+                Colour = Color.Aquamarine;
+                break;
+            case ParticleType.Lava:
+                Colour = Color.OrangeRed;
+                break;
         }
 
-        Texture.SetData(new Color[] { Colour });
-    }
-
-
-    /// <summary>
-    /// Performs an iteration on the particle, returning its new position.
-    /// </summary>
-    public Vector2 Iteration(Vector2 position, Vector2 screenSize)
-    {
-        if (Gravity)
+        Color[] data = new Color[SIZE * SIZE];
+        for (int i = 0; i < SIZE * SIZE; i++)
         {
-            float y = MathF.Min(position.Y + 1, screenSize.Y);
-            position = new(position.X, y);
+            data[i] = Colour;
         }
 
-        return position;
+        Texture.SetData(data);
     }
 }

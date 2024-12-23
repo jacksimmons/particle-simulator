@@ -1,2 +1,2 @@
-﻿using var game = new particle_game.ParticleGame();
+﻿using var game = new ParticleGame.ParticleGame();
 game.Run();
